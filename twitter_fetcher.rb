@@ -4,6 +4,7 @@ require 'rubygems'
 require 'twitter'
 require 'pry'
 require './secrets'
+require 'sinatra/reloader'
 
 class TwitterFetcher < Sinatra::Base
   helpers Sinatra::Jsonp
@@ -17,7 +18,7 @@ class TwitterFetcher < Sinatra::Base
 
   get '/' do
     @tweets = []
-    @@twitter_client.search('#Portland', result_type: "recent").results.map do |tweet|
+    @@twitter_client.search('#portland', result_type: 'recent').results.map do |tweet|
       @tweets.push "#{tweet.user.screen_name}: #{tweet.text}"
     end
     erb :tweets
