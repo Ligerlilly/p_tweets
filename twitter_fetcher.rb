@@ -2,19 +2,27 @@ require 'sinatra'
 require 'sinatra/jsonp'
 require 'rubygems'
 require 'twitter'
+require 'pry'
+require './secrets'
 
 class TwitterFetcher < Sinatra::Base
   helpers Sinatra::Jsonp
 
   @@twitter_client = Twitter::Client.new(
-    :consumer_key       => 'YOUR-CONSUMER-KEY-JUNX',
-    :consumer_secret    => 'YOUR-CONSUMER-SECRET-JUNX',
-    :oauth_token        => 'YOUR-OAUTH-TOKEN-JUNX',
-    :oauth_token_secret => 'YOUR-OAUTH-TOKEN-SECRET-JUNX',
+    :consumer_key       => ENV['consumer_key'],
+    :consumer_secret    => ENV['consumer_secret'],
+    :oauth_token        => ENV['oauth_token'],
+    :oauth_token_secret => ENV['oath_token_secret'],
   )
 
   get '/' do
-    jsonp @@twitter_client.home_timeline.map(&:attrs)
+    @tweets = []
+    @@twitter_client.search('#Portland', result_type: "recent").results.map do |tweet|
+      @tweets.push "#{tweet.user.screen_name}: #{tweet.text}"
+    end
+    erb :tweets
   end
+
+
 
 end
