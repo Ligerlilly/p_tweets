@@ -29,7 +29,8 @@ class TwitterFetcher < Sinatra::Base
   get '/search/:query' do
     @tweets = []
     @@twitter_client.search("#{params['query']}", {result_type: 'recent', geocode: "45.5434085,-122.654422,8mi", count: 50}).results.map do |tweet|
-      @tweets.push "#{tweet.user.screen_name}: #{tweet.text} **** #{tweet.user.location}"
+      
+      @tweets.push "<img src='#{tweet.user.profile_image_url}' alt='img'> #{tweet.user.screen_name}: #{tweet.text} **** #{tweet.user.location}"
     end
     erb :tweets
   end
